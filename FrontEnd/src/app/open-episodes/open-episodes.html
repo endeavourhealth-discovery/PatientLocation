@@ -1,0 +1,107 @@
+<div class="module">
+  <div class="container-fluid">
+    <div class="module-heading">
+      Open Episodes
+    </div>
+    <div class="module-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <!-- ***************** FILTERS ***************** -->
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label class="control-label">Location</label>
+                  <multiSelectDropdown [data]="locations" [(ngModel)]="locationFilter" name="locationFilter" ></multiSelectDropdown>
+                </div>
+                <div class="form-group col-md-2">
+                  <div>&nbsp;</div>
+                  <button class="btn btn-success pull-right" (click)="loadResources()">Load</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-block">
+              <!-- ***************** INPATIENTS ***************** -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h2>Inpatients <small>({{inpatients?.length}})</small></h2>
+                  <loadingIndicator [done]="inpatients">
+                    <div class="scroll-box-100">
+                      <table class="table table-sm table-hover">
+                    <thead>
+                      <tr>
+                        <th>Date Of Birth</th>
+                        <th>Name</th>
+                        <th>Service</th>
+                        <th>Internal ID</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let patient of inpatients" (click)="viewResource(patient)" [ngClass]="{'highlight': patient === highlight}">
+                        <td>{{getDate(patient) | date:'dd-MMM-y'}}</td>
+                        <td>{{getPatientName(patient)}}</td>
+                        <td>{{getServiceName(patient)}}</td>
+                        <td>{{patient.resourceJson.id}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                    </div>
+                  </loadingIndicator>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <!-- ***************** FILTERS ***************** -->
+              <div class="row">
+                <div class="form-group col-md-5">
+                  <label class="control-label">Location</label>
+                  <multiSelectDropdown [data]="locations" [(ngModel)]="inpatientLocationFilter" name="inpatientLocationFilter" ></multiSelectDropdown>
+                </div>
+                <div class="form-group col-md-2">
+                  <div>&nbsp;</div>
+                  <button class="btn btn-success pull-right" (click)="loadResources()">Load</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-block">
+              <!-- ***************** OUTPATIENTS ***************** -->
+              <div class="row">
+                <div class="col-md-12">
+                  <h2>Outpatients <small>({{outpatients?.length}})</small></h2>
+                  <loadingIndicator [done]="outpatients">
+                    <div class="scroll-box-100">
+                      <table class="table table-sm table-hover">
+                        <thead>
+                          <tr>
+                            <th>Date Of Birth</th>
+                            <th>Name</th>
+                            <th>Service</th>
+                            <th>Internal ID</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let patient of outpatients" (click)="viewResource(patient)" [ngClass]="{'highlight': patient === highlight}">
+                            <td>{{getDate(patient) | date:'dd-MMM-y'}}</td>
+                            <td>{{getPatientName(patient)}}</td>
+                            <td>{{getServiceName(patient)}}</td>
+                            <td>{{patient.resourceJson.id}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </loadingIndicator>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

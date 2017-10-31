@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.endeavourhealth.patient-location</groupId>
+    <artifactId>PatientLocation</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <cucumber.version>1.2.5</cucumber.version>
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <frontend-maven-plugin.version>1.4</frontend-maven-plugin.version>
+        <node.version>v6.10.1</node.version>
+        <swagger.version>1.5.13</swagger.version>
+
+        <eds-api.version>1.4-SNAPSHOT</eds-api.version>
+        <eds-core.version>1.36-SNAPSHOT</eds-core.version>
+        <eds-transforms.version>1.68-SNAPSHOT</eds-transforms.version>
+
+        <aspectj.version>1.8.9</aspectj.version>
+        <aspectj-metrics.version>1.2.0</aspectj-metrics.version>
+        <dropwizard-metrics.version>3.1.0</dropwizard-metrics.version>
+        <jersey.version>2.22.1</jersey.version>
+        <keycloak.version>2.0.0.Final</keycloak.version>
+        <postgresql.version>9.4.1212.jre7</postgresql.version>
+        <servlet.version>3.1.0</servlet.version>
+    </properties>
+
+    <modules>
+        <module>API</module>
+        <module>FrontEnd</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <snapshots />
+            <id>snapshots</id>
+            <name>libs-snapshot</name>
+            <url>http://maven.endeavourhealth.net:8081/artifactory/libs-snapshot</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>libs-release</name>
+            <url>http://maven.endeavourhealth.net:8081/artifactory/libs-release</url>
+        </repository>
+    </repositories>
+
+</project>

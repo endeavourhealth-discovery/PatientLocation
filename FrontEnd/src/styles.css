@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~font-awesome/css/font-awesome.css";
+
+@import "assets/css/index.css";
+
+.logo-image {
+  height: 50px;
+  width: 50px;
+  content: url('assets/img/nhs-logo.png');
+}
