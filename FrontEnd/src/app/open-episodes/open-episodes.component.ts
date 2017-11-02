@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {OpenEpisodesService} from './open-episodes.service';
-import {LoggerService} from 'eds-angular4';
+import {LoggerService, SecurityService} from 'eds-angular4';
 
 @Component({
   selector: 'app-open-episodes-component',
@@ -10,9 +10,23 @@ import {LoggerService} from 'eds-angular4';
 export class OpenEpisodesComponent implements OnInit {
 
   constructor(protected logger: LoggerService,
+              protected security: SecurityService,
               protected service: OpenEpisodesService) {
   }
 
   ngOnInit() {
+    this.loadOpenEpisodes();
+  }
+
+  public getUserOrg(): string {
+    return this.security.currentUser.organisation;
+  }
+
+  private loadOpenEpisodes(): void {
+    this.service.getOpenEpisodes()
+      .subscribe(
+        (result) => console.log(result),
+        (error) => console.error(error)
+      );
   }
 }

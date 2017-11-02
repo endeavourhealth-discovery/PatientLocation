@@ -7,8 +7,8 @@ export class OpenEpisodesService {
 
   constructor(private http: Http) { }
 
-  public getConfig(): Observable<any> {
-    return this.http.get('api/config', {withCredentials: true})
+  public getOpenEpisodes(): Observable<any> {
+    return this.http.get('api/episode/open', {withCredentials: true})
       .map((response) => response.json());
   }
 }

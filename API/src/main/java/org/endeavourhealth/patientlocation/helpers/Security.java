@@ -38,4 +38,9 @@ public class Security {
 
         return orgs;
     }
+
+    public static String getUsersDefaultOrganisation(SecurityContext securityContext) {
+        AccessToken accessToken = SecurityUtils.getToken(securityContext);
+        return (String)accessToken.getOtherClaims().getOrDefault("organisationId", null);
+    }
 }
