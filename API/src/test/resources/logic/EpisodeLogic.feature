@@ -4,10 +4,21 @@ Feature: EpisodeLogic
     When the active status is checked
     Then isActive will be false
 
+  Scenario: isActive of encounter with period but no end date
+    Given an encounter
+    And it has a period
+    And its start date is 25-Jan-2017
+    And its end date is null
+    And its status is ARRIVED
+    When the active status is checked
+    Then isActive will be true
+
   Scenario: isActive of encounter with end date
     Given an encounter
     And it has a period
+    And its start date is 25-Jan-2017
     And its end date is 17-Feb-2017
+    And its status is ARRIVED
     When the active status is checked
     Then isActive will be false
 

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EpisodeLogic {
@@ -62,7 +63,7 @@ public class EpisodeLogic {
         if (encounter == null)
             return false;
 
-        if (encounter.hasPeriod() || encounter.getPeriod().hasEnd())
+        if (encounter.hasPeriod() && encounter.getPeriod().hasEnd())
             return false;
 
         Encounter.EncounterState state = encounter.getStatus();
@@ -85,6 +86,8 @@ public class EpisodeLogic {
         return new OpenEpisode()
             .setServicePatient(servicePatient)
             .setGroup(getGroup(encounter))
+            .setStatus(getStatus(encounter))
+            .setDate(getDate(encounter))
             .setProblem(getProblem(encounter));
     }
 
@@ -136,5 +139,25 @@ public class EpisodeLogic {
         }
 
         return null;
+    }
+
+    private String getStatus(Encounter encounter) {
+        if (encounter == null)
+            return null;
+
+        if (!encounter.hasStatus())
+            return null;
+
+        return encounter.getStatus().getDisplay();
+    }
+
+    private Date getDate(Encounter encounter) {
+        if (encounter == null)
+            return null;
+
+        if (!encounter.hasPeriod())
+            return null;
+
+        return encounter.getPeriod().getStart();
     }
 }

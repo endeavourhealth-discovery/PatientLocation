@@ -1,6 +1,5 @@
 package org.endeavourhealth.patientlocation.dal;
 
-import org.endeavourhealth.common.cache.ObjectMapperPool;
 import org.endeavourhealth.common.cache.ParserPool;
 import org.endeavourhealth.core.database.dal.DalProvider;
 import org.endeavourhealth.core.database.dal.ehr.ResourceDalI;
@@ -10,7 +9,6 @@ import org.hl7.fhir.instance.model.Encounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 

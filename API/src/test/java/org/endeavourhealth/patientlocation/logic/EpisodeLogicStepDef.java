@@ -29,6 +29,14 @@ public class EpisodeLogicStepDef extends EpisodeLogic implements En {
             Period period = new Period();
             encounter.setPeriod(period);
         });
+        And("^its start date is (.*)$", (String startDateStr) -> {
+            Date startDate;
+            if ("null".equals(startDateStr))
+                startDate = null;
+            else
+                startDate = new Date(startDateStr);
+            encounter.getPeriod().setStart(startDate);
+        });
         And("^its end date is (.*)$", (String endDateStr) -> {
             Date endDate;
             if ("null".equals(endDateStr))
