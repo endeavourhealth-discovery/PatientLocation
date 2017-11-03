@@ -19,7 +19,7 @@
 
         <eds-api.version>1.4-SNAPSHOT</eds-api.version>
         <eds-core.version>1.36-SNAPSHOT</eds-core.version>
-        <eds-transforms.version>1.68-SNAPSHOT</eds-transforms.version>
+        <eds-transforms.version>1.72-SNAPSHOT</eds-transforms.version>
 
         <aspectj.version>1.8.9</aspectj.version>
         <aspectj-metrics.version>1.2.0</aspectj-metrics.version>
@@ -33,6 +33,7 @@
     <modules>
         <module>API</module>
         <module>FrontEnd</module>
+        <module>PatientLocationService</module>
     </modules>
 
     <repositories>

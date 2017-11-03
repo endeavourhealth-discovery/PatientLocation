@@ -7,14 +7,13 @@ import org.endeavourhealth.patientlocation.dal.Resource_DAL_Cassandra;
 import org.endeavourhealth.patientlocation.helpers.Security;
 import org.endeavourhealth.patientlocation.models.OpenEpisode;
 import org.endeavourhealth.patientlocation.models.ServicePatient;
-import org.hl7.fhir.instance.model.CodeableConcept;
-import org.hl7.fhir.instance.model.Coding;
-import org.hl7.fhir.instance.model.Encounter;
+import org.hl7.fhir.instance.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -40,31 +39,45 @@ public class EpisodeLogic {
             return null;
 
         String userServiceId = Security.getUsersDefaultOrganisation(context);
+        serviceIds.remove(userServiceId);
 
         List<ServicePatient> servicePatients = mpiDal.getMyRegisteredPatientsAtOtherServices(userServiceId, serviceIds);
 
         List<OpenEpisode> openEpisodes = new ArrayList<>();
 
         for (ServicePatient servicePatient : servicePatients) {
-            Encounter encounter = getLatestEncounterForServicePatient(servicePatient);
-            if (isActiveEncounter(encounter)) {
-                openEpisodes.add(createOpenEpisode(servicePatient, encounter));
-            }
+//            Encounter encounter = resourceDal.getLastestEncounterForServicePatient(servicePatient);
+//            if (isActiveEncounter(encounter)) {
+//                openEpisodes.add(createOpenEpisode(servicePatient, encounter));
+//            }
+            List<EpisodeOfCare> episodes = resourceDal.getOpenEpisodesForServicePatient(servicePatient);
+            openEpisodes.addAll(createOpenEpisodes(servicePatient, episodes));
         }
 
         return openEpisodes;
     }
 
-    private Encounter getLatestEncounterForServicePatient(ServicePatient servicePatient) {
-        return resourceDal.getLastestEncounterForServicePatient(servicePatient);
+    private List<OpenEpisode> createOpenEpisodes(ServicePatient servicePatient, List<EpisodeOfCare> episodes) {
+        List<OpenEpisode> result = new ArrayList<>();
+        for (EpisodeOfCare episode: episodes) {
+            result.add(
+                new OpenEpisode()
+                .setServicePatient(servicePatient)
+                .setGroup("Unknown")
+                .setStatus(getStatus(episode))
+                .setDate(getDate(episode))
+                .setProblem(getProblem(episode))
+            );
+        }
+        return result;
     }
 
     boolean isActiveEncounter(Encounter encounter) {
         if (encounter == null)
             return false;
 
-        if (encounter.hasPeriod() && encounter.getPeriod().hasEnd())
-            return false;
+//        if (encounter.hasPeriod() && encounter.getPeriod().hasEnd())
+//            return false;
 
         Encounter.EncounterState state = encounter.getStatus();
 
@@ -159,5 +172,58 @@ public class EpisodeLogic {
             return null;
 
         return encounter.getPeriod().getStart();
+    }
+
+    private Date getDate(EpisodeOfCare episode) {
+        if (episode == null)
+            return null;
+
+        if (!episode.hasPeriod())
+            return null;
+
+        return episode.getPeriod().getStart();
+    }
+
+    private String getStatus(EpisodeOfCare episodeOfCare) {
+        if (episodeOfCare == null)
+            return null;
+
+        if (!episodeOfCare.hasStatus())
+            return null;
+
+        return episodeOfCare.getStatus().getDisplay();
+    }
+
+    String getProblem(EpisodeOfCare episodeOfCare) {
+        if (episodeOfCare == null)
+            return null;
+
+        List<Reference> reference = episodeOfCare.getCondition();
+        if (reference.size() == 0)
+            return null;
+
+        return reference.get(0).getDisplay();
+
+//        List<CodeableConcept> reasons = episodeOfCare.getType();
+//
+//        if (reasons.size() == 0)
+//            return null;
+//
+//        CodeableConcept reasonConcept = reasons.get(0);
+//
+//        if (reasonConcept.hasText())
+//            return reasonConcept.getText();
+//
+//        if (reasonConcept.hasCoding()) {
+//            List<Coding> codings = reasonConcept.getCoding();
+//            Coding coding = codings.get(0);
+//            if (coding.hasDisplay())
+//                return coding.getDisplay();
+//
+//            if (coding.hasCode())
+//                return coding.getCode();
+//        }
+//
+//        return null;
     }
 }
