@@ -28,7 +28,7 @@ public class MPI_DAL implements ContextShutdownHook {
             String sql = "SELECT distinct s.service_id, s.system_id, s.patient_id, l.person_id " +
                 "FROM patient_search s " +
                 "JOIN patient_link l on l.patient_id = s.patient_id " +
-                "WHERE own.registration_end is null ";
+                "WHERE registration_end is null ";
 
             try (PreparedStatement stement = connection.prepareStatement(sql)) {
                 ResultSet rs = stement.executeQuery();

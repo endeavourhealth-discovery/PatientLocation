@@ -3,7 +3,6 @@ package org.endeavourhealth.patientlocation;
 import com.google.common.base.Strings;
 import org.endeavourhealth.common.cache.ParserPool;
 import org.endeavourhealth.core.database.dal.DalProvider;
-import org.endeavourhealth.core.database.dal.eds.PatientSearchDalI;
 import org.endeavourhealth.core.database.dal.ehr.ResourceDalI;
 import org.endeavourhealth.core.database.dal.ehr.models.ResourceWrapper;
 import org.endeavourhealth.core.database.dal.reference.EncounterCodeDalI;
@@ -16,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,14 +35,21 @@ public class Logic {
         if (registeredPatients == null || registeredPatients.size() == 0)
             return;
 
+        int i = 0;
+        int count = registeredPatients.size();
+        System.out.println("Processing patients...");
         for (RegisteredPatient patient : registeredPatients) {
+            i++;
+            System.out.print("\rProcessing patient " + getProgress(i, count));
+            System.out.flush();
             try {
                 List<ActiveEncounter> activeEncounters = getPatientActiveEncounters(patient);
-                // TODO: Put active encounters into own database
+                savePatientActiveEncounters(patient, activeEncounters);
             } catch (Exception e) {
                 LOG.error("Unable to get active encounters for patient " + patient.getPatientId(), e);
             }
         }
+        System.out.println("\nProcessing done");
     }
 
     private List<RegisteredPatient> getRegisteredPatientList() {
@@ -142,5 +149,17 @@ public class Logic {
             return encounter1;
         else
             return encounter2;
+    }
+
+    private void savePatientActiveEncounters(RegisteredPatient patient, List<ActiveEncounter> activeEncounters) {
+        // TODO: File active encounters in DB
+    }
+
+    private String getProgress(int i, int count) {
+        int pcnt = (i * 100)/count;
+        return "[" +
+            String.join("", Collections.nCopies(pcnt, "=")) +
+            String.join("", Collections.nCopies(100-pcnt, " ")) +
+            "] (" + i + "/" + count + ")";
     }
 }

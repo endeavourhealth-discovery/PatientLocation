@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -29,10 +28,15 @@ public class EpisodeLogic {
             resourceDal = new Resource_DAL_Cassandra();
     }
 
+    public EpisodeLogic(MPI_DAL aMpiDal, Resource_DAL aResourceDal) {
+        mpiDal = aMpiDal;
+        resourceDal = aResourceDal;
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(EpisodeLogic.class);
 
     public List<OpenEpisode> getOpenEpisodes(SecurityContext context, List<String> serviceIds) {
-        if (serviceIds == null || serviceIds.size()==0)
+        if (serviceIds == null || serviceIds.size() == 0)
             serviceIds = new ArrayList<>(Security.getUserAllowedOrganisationIdsFromSecurityContext(context));
 
         if (!Security.userIsAllowedAccess(context, serviceIds))
@@ -43,8 +47,10 @@ public class EpisodeLogic {
 
         List<ServicePatient> servicePatients = mpiDal.getMyRegisteredPatientsAtOtherServices(userServiceId, serviceIds);
 
-        List<OpenEpisode> openEpisodes = new ArrayList<>();
+        if (servicePatients == null)
+            return null;
 
+        List<OpenEpisode> openEpisodes = new ArrayList<>();
         for (ServicePatient servicePatient : servicePatients) {
 //            Encounter encounter = resourceDal.getLastestEncounterForServicePatient(servicePatient);
 //            if (isActiveEncounter(encounter)) {
@@ -59,25 +65,27 @@ public class EpisodeLogic {
 
     private List<OpenEpisode> createOpenEpisodes(ServicePatient servicePatient, List<EpisodeOfCare> episodes) {
         List<OpenEpisode> result = new ArrayList<>();
-        for (EpisodeOfCare episode: episodes) {
-            result.add(
-                new OpenEpisode()
-                .setServicePatient(servicePatient)
-                .setGroup("Unknown")
-                .setStatus(getStatus(episode))
-                .setDate(getDate(episode))
-                .setProblem(getProblem(episode))
-            );
+        if (episodes != null) {
+            for (EpisodeOfCare episode : episodes) {
+                result.add(
+                    new OpenEpisode()
+                        .setServicePatient(servicePatient)
+                        .setGroup("Unknown")
+                        .setStatus(getStatus(episode))
+                        .setDate(getDate(episode))
+                        .setProblem(getProblem(episode))
+                );
+            }
         }
         return result;
     }
 
-    boolean isActiveEncounter(Encounter encounter) {
+    private boolean isActiveEncounter(Encounter encounter) {
         if (encounter == null)
             return false;
 
-//        if (encounter.hasPeriod() && encounter.getPeriod().hasEnd())
-//            return false;
+        if (encounter.hasPeriod() && encounter.getPeriod().hasEnd())
+            return false;
 
         Encounter.EncounterState state = encounter.getStatus();
 
@@ -95,7 +103,7 @@ public class EpisodeLogic {
         }
     }
 
-    OpenEpisode createOpenEpisode(ServicePatient servicePatient, Encounter encounter) {
+    private OpenEpisode createOpenEpisode(ServicePatient servicePatient, Encounter encounter) {
         return new OpenEpisode()
             .setServicePatient(servicePatient)
             .setGroup(getGroup(encounter))
@@ -104,7 +112,7 @@ public class EpisodeLogic {
             .setProblem(getProblem(encounter));
     }
 
-    String getGroup(Encounter encounter) {
+    private String getGroup(Encounter encounter) {
         if (encounter == null)
             return "Outpatient";
 
@@ -127,7 +135,7 @@ public class EpisodeLogic {
         }
     }
 
-    String getProblem(Encounter encounter) {
+    private String getProblem(Encounter encounter) {
         if (encounter == null)
             return null;
 
@@ -194,7 +202,7 @@ public class EpisodeLogic {
         return episodeOfCare.getStatus().getDisplay();
     }
 
-    String getProblem(EpisodeOfCare episodeOfCare) {
+    private String getProblem(EpisodeOfCare episodeOfCare) {
         if (episodeOfCare == null)
             return null;
 
