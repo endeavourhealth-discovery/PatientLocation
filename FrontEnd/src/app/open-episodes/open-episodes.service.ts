@@ -8,8 +8,18 @@ export class OpenEpisodesService {
 
   constructor(private http: Http) { }
 
-  public getOpenEpisodes(): Observable<OpenEpisode[]> {
-    return this.http.get('api/episode/open', {withCredentials: true})
+  public getInpatients(): Observable<any[]> {
+    return this.http.get('api/episode/inpatient', {withCredentials: true})
+      .map((response) => response.json());
+  }
+
+  public getOutpatients(): Observable<any[]> {
+    return this.http.get('api/episode/outpatient', {withCredentials: true})
+      .map((response) => response.json());
+  }
+
+  public getEmergencies(): Observable<any[]> {
+    return this.http.get('api/episode/emergency', {withCredentials: true})
       .map((response) => response.json());
   }
 }

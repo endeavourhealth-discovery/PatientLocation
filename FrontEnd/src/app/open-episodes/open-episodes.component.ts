@@ -8,6 +8,10 @@ import {LoggerService, SecurityService} from 'eds-angular4';
   styleUrls: ['./open-episodes.component.css']
 })
 export class OpenEpisodesComponent implements OnInit {
+  private inpatients: any[];
+  private outpatients: any[];
+  private emergency: any[];
+
 
   constructor(protected logger: LoggerService,
               protected security: SecurityService,
@@ -23,10 +27,30 @@ export class OpenEpisodesComponent implements OnInit {
   }
 
   private loadOpenEpisodes(): void {
-    this.service.getOpenEpisodes()
+    const vm = this;
+
+    this.service.getInpatients()
       .subscribe(
-        (result) => console.log(result),
-        (error) => console.error(error)
+        (result) => vm.inpatients = result,
+        (error) => vm.logger.error(error)
       );
+
+    this.service.getOutpatients()
+      .subscribe(
+        (result) => vm.outpatients = result,
+        (error) => vm.logger.error(error)
+      );
+
+    this.service.getEmergencies()
+      .subscribe(
+        (result) => vm.emergency = result,
+        (error) => vm.logger.error(error)
+      );
+
+    // this.service.getOpenEpisodes()
+    //   .subscribe(
+    //     (result) => console.log(result),
+    //     (error) => console.error(error)
+    //   );
   }
 }

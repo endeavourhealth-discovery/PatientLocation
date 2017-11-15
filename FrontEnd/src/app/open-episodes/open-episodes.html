@@ -11,34 +11,28 @@
               <h2>Inpatients</h2>
             </div>
             <div class="card-block">
-              <table class="table table-sm table-striped table-hover">
-                <thead>
-                  <th>Name</th>
-                  <th>NHS No</th>
-                  <th>Location</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Problem</th>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><a href="/#/app/recordViewer/1234567890" target="_blank">SMITH, John (Mr)</a></td>
-                    <td>1234 567 890</td>
-                    <td>Barts Hospital - Ward 10</td>
-                    <td>26-Sep-2017</td>
-                    <td>Admitted</td>
-                    <td>Asthma</td>
-                  </tr>
-                  <tr>
-                    <td><a href="/#/app/recordViewer/1234567890" target="_blank">JONES, Alice (Mrs)</a></td>
-                    <td>0987 654 321</td>
-                    <td>Barts Hospital - A & E</td>
-                    <td>31-Oct-2017</td>
-                    <td>Triage</td>
-                    <td>Myocardial Infarction</td>
-                  </tr>
-                </tbody>
-              </table>
+              <loadingIndicator [done]="inpatients">
+                <table class="table table-sm table-striped table-hover">
+                  <thead>
+                    <th>Name</th>
+                    <th>NHS No</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Problem</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let patient of inpatients">
+                      <td><a href="/#/app/recordViewer/{{patient.nhsNumber}}" target="_blank">{{patient.name}}</a></td>
+                      <td>{{patient.nhsNumber}}</td>
+                      <td>{{patient.location}}</td>
+                      <td>{{patient.dob}}</td>
+                      <td>{{patient.status}}</td>
+                      <td>{{patient.problem}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </loadingIndicator>
             </div>
           </div>
         </div>
@@ -60,6 +54,17 @@
                   <th>Status</th>
                   <th>Problem</th>
                 </thead>
+                <tbody>
+                  <tr *ngFor="let patient of outpatients">
+                    <td><a href="/#/app/recordViewer/{{patient.nhsNumber}}" target="_blank">{{patient.name}}</a></td>
+                    <td>{{patient.nhsNumber}}</td>
+                    <td>{{patient.location}}</td>
+                    <td>{{patient.dob}}</td>
+                    <td>{{patient.status}}</td>
+                    <td>{{patient.problem}}</td>
+                  </tr>
+                </tbody>
+
               </table>
             </div>
           </div>
@@ -82,6 +87,17 @@
                   <th>Status</th>
                   <th>Problem</th>
                 </thead>
+                <tbody>
+                  <tr *ngFor="let patient of emergency">
+                    <td><a href="/#/app/recordViewer/{{patient.nhsNumber}}" target="_blank">{{patient.name}}</a></td>
+                    <td>{{patient.nhsNumber}}</td>
+                    <td>{{patient.location}}</td>
+                    <td>{{patient.dob}}</td>
+                    <td>{{patient.status}}</td>
+                    <td>{{patient.problem}}</td>
+                  </tr>
+                </tbody>
+
               </table>
             </div>
           </div>
