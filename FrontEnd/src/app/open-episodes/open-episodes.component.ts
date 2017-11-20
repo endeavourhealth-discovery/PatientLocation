@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {OpenEpisodesService} from './open-episodes.service';
 import {LoggerService, SecurityService} from 'eds-angular4';
+import {OngoingEncounter} from '../models/OngoingEncounter';
 
 @Component({
   selector: 'app-open-episodes-component',
@@ -8,10 +9,8 @@ import {LoggerService, SecurityService} from 'eds-angular4';
   styleUrls: ['./open-episodes.component.css']
 })
 export class OpenEpisodesComponent implements OnInit {
-  private inpatients: any[];
-  private outpatients: any[];
-  private emergency: any[];
-
+  private ongoingEncountersByStatus: Map<number, OngoingEncounter[]>;
+  private statusList: number[];
 
   constructor(protected logger: LoggerService,
               protected security: SecurityService,
@@ -28,29 +27,43 @@ export class OpenEpisodesComponent implements OnInit {
 
   private loadOpenEpisodes(): void {
     const vm = this;
-
-    this.service.getInpatients()
+    vm.ongoingEncountersByStatus = null;
+    this.service.getOngoingEncounters()
       .subscribe(
-        (result) => vm.inpatients = result,
+        (result) => vm.processEncounters(result),
         (error) => vm.logger.error(error)
       );
+  }
 
-    this.service.getOutpatients()
-      .subscribe(
-        (result) => vm.outpatients = result,
-        (error) => vm.logger.error(error)
-      );
+  private processEncounters(ongoingEncouters: OngoingEncounter[]) {
+    const tempMap = new Map();
+    const tempStatusList = [];
 
-    this.service.getEmergencies()
-      .subscribe(
-        (result) => vm.emergency = result,
-        (error) => vm.logger.error(error)
-      );
+    for(const ongoingEncounter of ongoingEncouters) {
+      if (!tempMap.has(ongoingEncounter.status)) {
+        tempStatusList.push(ongoingEncounter.status);
+        tempMap.set(ongoingEncounter.status, []);
+      }
 
-    // this.service.getOpenEpisodes()
-    //   .subscribe(
-    //     (result) => console.log(result),
-    //     (error) => console.error(error)
-    //   );
+      tempMap.get(ongoingEncounter.status).push(ongoingEncounter);
+    }
+
+    this.ongoingEncountersByStatus = tempMap;
+    this.statusList = tempStatusList;
+  }
+
+  private getStatusName(status: number) {
+    switch(status) {
+      case 8023: return 'Inpatient';
+      case 8018: return 'Outpatient';
+      case 8024: return 'Day case';
+      case 8048: return 'Emergency';
+      case 8049: return 'Waiting list';
+      default: return 'Unknown';
+    }
+  }
+
+  private getEncountersByStatus(status: number): OngoingEncounter[] {
+    return this.ongoingEncountersByStatus.get(status);
   }
 }

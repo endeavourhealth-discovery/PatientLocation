@@ -1,108 +1,38 @@
 <div class="module">
   <div class="container-fluid">
     <div class="module-heading">
-      Where are my patients?
+      Where are my patients? - Chrisp Street Health Centre
     </div>
     <div class="module-body">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h2>Inpatients</h2>
-            </div>
-            <div class="card-block">
-              <loadingIndicator [done]="inpatients">
-                <table class="table table-sm table-striped table-hover">
-                  <thead>
-                    <th>Name</th>
-                    <th>NHS No</th>
-                    <th>Location</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Problem</th>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let patient of inpatients">
-                      <td><a href="/#/app/recordViewer/{{patient.nhsNumber}}" target="_blank">{{patient.name}}</a></td>
-                      <td>{{patient.nhsNumber}}</td>
-                      <td>{{patient.location}}</td>
-                      <td>{{patient.dob}}</td>
-                      <td>{{patient.status}}</td>
-                      <td>{{patient.problem}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </loadingIndicator>
+      <loadingIndicator [done]="statusList">
+        <div class="row">
+          <div class="col-md-12" *ngFor="let status of statusList">
+            <div class="card mb-3">
+              <div class="card-header">
+                <h2>{{getStatusName(status)}} <small>({{getEncountersByStatus(status).length}})</small></h2>
+              </div>
+              <div class="card-block">
+                <div class="scroll-box-150">
+                  <table class="table table-sm table-striped table-hover">
+                    <thead>
+                      <th>NHS No</th>
+                      <th>Location</th>
+                      <th>Date</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let encounter of getEncountersByStatus(status)">
+                        <td><a href="/#/app/recordViewer/{{encounter.nhsNumber}}" target="_blank">{{encounter.nhsNumber}}</a></td>
+                        <td>{{encounter.organisation}}</td>
+                        <td>{{encounter.date}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h2>Outpatients</h2>
-            </div>
-            <div class="card-block">
-              <table class="table table-sm table-striped table-hover">
-                <thead>
-                  <th>Name</th>
-                  <th>NHS No</th>
-                  <th>Location</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Problem</th>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let patient of outpatients">
-                    <td><a href="/#/app/recordViewer/{{patient.nhsNumber}}" target="_blank">{{patient.name}}</a></td>
-                    <td>{{patient.nhsNumber}}</td>
-                    <td>{{patient.location}}</td>
-                    <td>{{patient.dob}}</td>
-                    <td>{{patient.status}}</td>
-                    <td>{{patient.problem}}</td>
-                  </tr>
-                </tbody>
-
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h2>Accident & Emergency</h2>
-            </div>
-            <div class="card-block">
-              <table class="table table-sm table-striped table-hover">
-                <thead>
-                  <th>Name</th>
-                  <th>NHS No</th>
-                  <th>Location</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Problem</th>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let patient of emergency">
-                    <td><a href="/#/app/recordViewer/{{patient.nhsNumber}}" target="_blank">{{patient.name}}</a></td>
-                    <td>{{patient.nhsNumber}}</td>
-                    <td>{{patient.location}}</td>
-                    <td>{{patient.dob}}</td>
-                    <td>{{patient.status}}</td>
-                    <td>{{patient.problem}}</td>
-                  </tr>
-                </tbody>
-
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      </loadingIndicator>
     </div>
   </div>
 </div>
