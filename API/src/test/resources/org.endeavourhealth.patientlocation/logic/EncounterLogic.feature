@@ -1,4 +1,8 @@
-Feature: EncounterLogic - problem
+Feature: EncounterLogic
+  Scenario:
+    When encounger logic is instanciated
+    Then the default DAL will be created
+
   Scenario: Get open episodes - no allowed services, null requested services
     Given a security context
     And a requested organisation list of null

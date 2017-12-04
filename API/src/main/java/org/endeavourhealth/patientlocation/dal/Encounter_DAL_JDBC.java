@@ -27,25 +27,20 @@ public class Encounter_DAL_JDBC implements Encounter_DAL, ContextShutdownHook {
         try {
             List<OngoingEncounter> ongoingEncounters = new ArrayList<>();
 
-            String sql = "SELECT distinct 12345 as nhs_number, person_id, e1.organization_id, o.name,  e1.clinical_effective_date, e1.patient_status_concept_id " +
-                "    FROM  encounter_detail AS e1 " +
-                "    JOIN " +
-                "      ( SELECT  person_id, organization_id, MAX(clinical_effective_date) AS clinical_effective_date " +
-                "            FROM  encounter_detail " +
-                "            WHERE administrative_action_concept_id != 8051 " +
-                "            GROUP BY  person_id, organization_id " +
-                "      ) AS e2 USING (person_id, organization_id, clinical_effective_date) " +
-                "JOIN organization o on o.id = e1.service_provider_organization_id "; // +
-//                "JOIN patient p on p.person_id = e1.person_id and p.organization_id = ?\n" +
-//                "WHERE completion_status_concept_id = 8040 -- Ongoing;\n" +
-//                "AND e1.organization_id IN (" + String.join(",", Collections.nCopies(otherServiceIds.size(), "?")) +")\n";
+            String sql = "SELECT DISTINCT p.nhs_number, e1.person_id, e1.organization_id, o.name,  e1.clinical_effective_date, e1.patient_status_concept_id\n" +
+                "    FROM  encounter_detail AS e1\n" +
+                "    JOIN\n" +
+                "      ( SELECT  person_id, organization_id, MAX(clinical_effective_date) AS clinical_effective_date\n" +
+                "            FROM  encounter_detail\n" +
+                "            WHERE administrative_action_concept_id != 8051 -- Delete previous\n" +
+                "            GROUP BY  person_id, organization_id\n" +
+                "      ) AS e2 USING (person_id, organization_id, clinical_effective_date)\n" +
+                "   JOIN patient p ON p.person_id = e1.person_id AND p.organization_id = e1.organization_id\n" +
+                "   JOIN organization o ON o.id = e1.service_provider_organization_id\n" +
+                "   WHERE completion_status_concept_id = 8040 -- Ongoing;\n" +
+                "   ORDER BY e1.patient_status_concept_id, e1.clinical_effective_date DESC";
 
             try (PreparedStatement stement = connection.prepareStatement(sql)) {
-                int i = 1;
-//                stement.setString(i++, myServiceId);
-//                for(String serviceId : otherServiceIds)
-//                    stement.setString(i++, serviceId);
-
                 ResultSet rs = stement.executeQuery();
 
                 while (rs.next()) {

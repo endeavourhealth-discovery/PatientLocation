@@ -1,9 +1,10 @@
-package steps;
+package org.endeavourhealth.patientlocation.logic;
 
 import cucumber.api.java8.En;
-import mocks.Mock_Encounter_DAL;
-import org.endeavourhealth.patientlocation.logic.EncounterLogic;
+import org.endeavourhealth.patientlocation.mocks.Mock_Encounter_DAL;
+import org.endeavourhealth.patientlocation.dal.Encounter_DAL_JDBC;
 import org.endeavourhealth.patientlocation.models.OngoingEncounter;
+import org.endeavourhealth.patientlocation.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class EncounterLogicStepDef implements En {
+    private EncounterLogic encounterLogic;
     private List<OngoingEncounter> ongoingEncounters;
 
     public EncounterLogicStepDef(World world, Mock_Encounter_DAL mock_resourceDal) {
@@ -35,6 +37,13 @@ public class EncounterLogicStepDef implements En {
         Then("^ongoing encounters list will be populated$", () -> {
             assertNotNull(ongoingEncounters);
             assertNotEquals(0, ongoingEncounters.size());
+        });
+        When("^encounger logic is instanciated$", () -> {
+            encounterLogic = new EncounterLogic();
+        });
+        Then("^the default DAL will be created$", () -> {
+            // Write code here that turns the phrase above into concrete actions
+            assertTrue(encounterLogic.encounterDal instanceof Encounter_DAL_JDBC);
         });
     }
 }

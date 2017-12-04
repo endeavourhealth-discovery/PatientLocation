@@ -1,4 +1,4 @@
-package mocks;
+package org.endeavourhealth.patientlocation.mocks;
 
 import org.keycloak.representations.AccessToken;
 

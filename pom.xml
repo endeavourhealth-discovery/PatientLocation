@@ -33,7 +33,6 @@
     <modules>
         <module>API</module>
         <module>FrontEnd</module>
-        <module>PatientLocationService</module>
     </modules>
 
     <repositories>

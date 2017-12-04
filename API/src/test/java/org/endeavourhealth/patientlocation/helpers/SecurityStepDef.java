@@ -1,11 +1,10 @@
-package steps;
+package org.endeavourhealth.patientlocation.helpers;
 
 import cucumber.api.java8.En;
-import mocks.Mock_SecurityContext;
-import org.endeavourhealth.patientlocation.helpers.Security;
+import org.endeavourhealth.patientlocation.mocks.Mock_SecurityContext;
+import org.endeavourhealth.patientlocation.World;
 import org.keycloak.KeycloakPrincipal;
 
-import javax.ws.rs.core.SecurityContext;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;

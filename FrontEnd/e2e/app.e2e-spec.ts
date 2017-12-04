@@ -1,15 +1,15 @@
-import { AngularPage } from './app.po';
+import { Application } from './app.po';
 import {$, browser, by, element} from 'protractor';
 
 describe('angular App', () => {
-  let page: AngularPage;
+  let app: Application;
 
   beforeEach(() => {
-    page = new AngularPage();
+    app = new Application();
   });
 
   it ('Initialize', () => {
-    page.navigateTo();
+    app.navigateTo();
 
     // Wait for login.
     browser.wait(browser.ExpectedConditions.urlContains('/auth/realms/endeavour/protocol/openid-connect'));
@@ -25,8 +25,6 @@ describe('angular App', () => {
   });
 
   it ('Check page loaded', done => {
-    element(by.className('title-text')).getText()
-      .then(msg => expect(msg).toEqual('Data Validation'))
-      .then(done, done.fail);
+    expect(element(by.className('title-text')).getText()).toBe('Data Validation');
   });
 });

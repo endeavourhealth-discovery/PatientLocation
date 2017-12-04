@@ -1,4 +1,4 @@
-package mocks;
+package org.endeavourhealth.patientlocation.mocks;
 
 import org.endeavourhealth.patientlocation.dal.Encounter_DAL;
 import org.endeavourhealth.patientlocation.models.OngoingEncounter;
